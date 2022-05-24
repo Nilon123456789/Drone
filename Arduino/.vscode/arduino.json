@@ -1,0 +1,7 @@
+{
+    "sketch": "Drone/Drone.ino",
+    "configuration": "cpu=atmega328",
+    "board": "arduino:avr:nano",
+    "programmer": "avrispmkii",
+    "port": "/dev/tty.usbserial-14110"
+}
