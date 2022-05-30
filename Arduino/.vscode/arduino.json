@@ -1,7 +1,7 @@
 {
-    "sketch": "Drone/Drone.ino",
+    "sketch": "Test_Scripts/MPU_Test/MPU_Test.ino",
     "configuration": "cpu=atmega328",
     "board": "arduino:avr:nano",
     "programmer": "avrispmkii",
-    "port": "/dev/tty.usbserial-14110"
+    "port": "/dev/tty.usbserial-14310"
 }
