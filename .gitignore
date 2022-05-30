@@ -16,6 +16,9 @@
 # Mono auto generated files
 mono_crash.*
 
+# SSH Key
+.key/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
