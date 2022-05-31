@@ -35,18 +35,30 @@ void setup() {
   ESC_BR.attach(EscPinBR);
   Serial.print('>');
 
-  //Set the ESC to idle speed
-  ESC_FL.writeMicroseconds(escIdle); 
-  ESC_FR.writeMicroseconds(escIdle);
-  ESC_BL.writeMicroseconds(escIdle); 
-  ESC_BR.writeMicroseconds(escIdle);
+  
+  //Set the ESC to remote max speed
+  ESC_FL.writeMicroseconds(throttleMax); 
+  ESC_FR.writeMicroseconds(throttleMax);
+  ESC_BL.writeMicroseconds(throttleMax); 
+  ESC_BR.writeMicroseconds(throttleMax);
+
+  tone(3, 3000, 750);
+  delay(5000);
+  tone(3, 3000, 750);
   Serial.print('>');
 
-  for(int i; i < 10; i++) {//Delay with feedback to let the esc boot
+  for(int i; i < 15; i++) {//Delay with feedback to let the esc boot
     Serial.print('*');
     delay(1000);
   }
+  tone(3, 3000, 750);
   Serial.println("");
+
+  //Set the ESC to remote max speed
+  ESC_FL.writeMicroseconds(throttleMin); 
+  ESC_FR.writeMicroseconds(throttleMin);
+  ESC_BL.writeMicroseconds(throttleMin); 
+  ESC_BR.writeMicroseconds(throttleMin);
 
   Serial.println("Seting up Reciver");
 
