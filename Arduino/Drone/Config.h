@@ -11,8 +11,8 @@
 
 //ESC                                                        CW    CCW
 #define EscPinFL 11 //CW                                        ╲  ╱
-#define EscPinFR 10 //CCW                                        ▉     ↑ forward
-#define EscPinBL 9 //CCW                                       ╱  ╲
+#define EscPinFR 10 //CCW                                         ▉     ↑ forward
+#define EscPinBL 9 //CCW                                        ╱  ╲
 #define EscPinBR 6 //CW                                     CCW   CW
 
 //Remote
@@ -58,4 +58,12 @@ extern const int yawMinAngle=-10, yawMaxAngle=10;
 extern const float yawStrenght = 0.1;
 
 /******MPU6050 Values******/
+
+extern const int mappedAxis[3][3] = //Place a 1 to link the mpu input (on the top) to the axis output (on the side), one 1 max per row and colums
+{
+//  X , Y , Z
+  {'0','1','0'}, //Pitch
+  {'1','0','0'}, //Roll
+  {'0','0','1'} //Yaw
+};
 extern const float GyroX=-109.47, GyroY=51.02, GyroZ=-109.47;//Gyro offset 

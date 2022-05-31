@@ -42,6 +42,7 @@ void setup() {
   mpu.Initialize();
   mpu.SetGyroOffsets(GyroX,GyroY,GyroZ); //Seting the gyrooffset from the Config.h file
   Serial.println("");
+  mpu.Calibrate();
 
   tone(PiezoPin, 3000, 250);
   delay(250);
@@ -97,10 +98,13 @@ void loop() {
   //Get the new gyro value
   mpu.Execute();
 
-  //Set the new gyro Value
-  gyro_input_Roll = mpu.GetAngX();
-  gyro_input_Pitch = mpu.GetAngY();
-  gyro_input_Yaw = mpu.GetAngZ();
+  //Set the angles in an array
+  float mpuAngles[3] = {mpu.GetAngX(), mpu.GetAngY(), mpu.GetAngZ()};
+
+  //Set the new gyro Value based on the axis
+  gyro_input_Roll = mpuAngles[0] * mappedAxis[0][0] + mpuAngles[1] * mappedAxis[0][1] + mpuAngles[2] * mappedAxis[0][2];
+  gyro_input_Pitch = mpuAngles[0] * mappedAxis[1][0] + mpuAngles[1] * mappedAxis[1][1] + mpuAngles[2] * mappedAxis[1][2];
+  gyro_input_Yaw = mpuAngles[0] * mappedAxis[2][0] + mpuAngles[1] * mappedAxis[2][1] + mpuAngles[2] * mappedAxis[2][2];
 
   //Get the current throttle value
   int _throttle = map(pulseIn(ThrotlePin,HIGH),throttleMin,throttleMax,escIdle,escMax);
@@ -116,13 +120,14 @@ void loop() {
 
   //Set the new setpoint from the controller
   pid_setpoint_Roll = map(pulseIn(RollPin, HIGH),rollMin,rollMax,rollMinAngle,rollMaxAngle);
-  pid_setpoint_Pitch = map(pulseIn(PitchPin, HIGH),pitchMin,pitchMax,pitchMinAngle,pitchMinAngle);
-  pid_setpoint_Yaw = pid_setpoint_Yaw + map(pulseIn(YawPin, HIGH),yawMin,yawMax,yawMinAngle,yawMinAngle) * yawStrenght;
+  pid_setpoint_Pitch = map(pulseIn(PitchPin, HIGH),pitchMin,pitchMax,pitchMinAngle,pitchMaxAngle);
+  pid_setpoint_Yaw = pid_setpoint_Yaw + map(pulseIn(YawPin, HIGH),yawMin,yawMax,yawMinAngle,yawMaxAngle) * yawStrenght;
 
   //Make sure the pid_setpoint_Yaw is in the range of the MPU6050
   if (pid_setpoint_Yaw > 180) pid_setpoint_Yaw = -180 + (pid_setpoint_Yaw - 180);
   if (pid_setpoint_Yaw < -180) pid_setpoint_Yaw = 180 + (pid_setpoint_Yaw + 180);
 
+  /*
   //Compute the pid values
   pidCompute();
 
@@ -131,7 +136,12 @@ void loop() {
   ESC_val_FR = _throttle - pid_output_Roll + pid_output_Pitch - pid_output_Yaw;
   ESC_val_BL = _throttle + pid_output_Roll - pid_output_Pitch - pid_output_Yaw;
   ESC_val_BR = _throttle - pid_output_Roll - pid_output_Pitch + pid_output_Yaw;
-  
+  */
+  ESC_val_FL = _throttle;
+  ESC_val_FR = _throttle;
+  ESC_val_BL = _throttle;
+  ESC_val_BR = _throttle;
+
   
   
   //Make sure motor val ar in range
