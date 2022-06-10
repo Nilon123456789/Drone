@@ -8,20 +8,20 @@
 /************************************/
 /*              Pinout              */
 /************************************/
-
-//ESC                                                        CW    CCW
-#define EscPinFL 11 //CW                                        ╲  ╱
-#define EscPinFR 10 //CCW                                         ▉     ↑ forward
-#define EscPinBL 9 //CCW                                        ╱  ╲
-#define EscPinBR 6 //CW                                     CCW   CW
-
+//                                                               (2)   (1)
+//ESC                                                            CW    CCW
+#define EscPinFR 11 //CCW  (1)                                    ╲  ╱
+#define EscPinFL 10 //CW (2)                                        ▉     ↑ forward
+#define EscPinBR 9 //CW  (3)                                      ╱  ╲
+#define EscPinBL 6 //CCW   (4)                                 CCW    CW
+//                                                               (4)    (3)
 //Remote
 #define ThrotlePin A0
 #define RollPin A1
 #define PitchPin A2  
 #define YawPin A3
-#define Extra1Pin A4
-#define Extar2Pin A5
+#define Extra1Pin 4
+#define Extra2Pin 5
 
 //Piezo
 #define PiezoPin 3
@@ -50,6 +50,8 @@ extern const int throttleMin=996, throttleMax=1988;
 extern const int rollMin=1010, rollMax=1986;
 extern const int pitchMin=994, pitchMax=1983;
 extern const int yawMin=995, yawMax=1978;
+extern const int extra1Min=995, extra1Max=1978;
+extern const int extra2Min=995, extra2Max=1978;
 //RC value mapping
 extern const int rollMinAngle=-65, rollMaxAngle=65;
 extern const int pitchMinAngle=-45, pitchMaxAngle=45;
@@ -57,13 +59,14 @@ extern const int yawMinAngle=-10, yawMaxAngle=10;
 //Yaw move speed
 extern const float yawStrenght = 0.1;
 
-/******MPU6050 Values******/
-
-extern const int mappedAxis[3][3] = //Place a 1 to link the mpu input (on the top) to the axis output (on the side), one 1 max per row and colums
+extern const int mappedAxis[3][3] = //Place a 1 or -1 (to invert) to link the mpu input (on the top) to the axis output (on the side), one 1 max per row and colums
 {
 //  X , Y , Z
   {'0','1','0'}, //Pitch
   {'1','0','0'}, //Roll
   {'0','0','1'} //Yaw
 };
+
+/******MPU6050 Values******/
+
 extern const float GyroX=-109.47, GyroY=51.02, GyroZ=-109.47;//Gyro offset 

@@ -1,5 +1,5 @@
 {
-    "sketch": "Test_Scripts/ESC_Test/ESC_Test.ino",
+    "sketch": "Drone/Drone.ino",
     "configuration": "cpu=atmega328",
     "board": "arduino:avr:nano",
     "programmer": "avrispmkii",

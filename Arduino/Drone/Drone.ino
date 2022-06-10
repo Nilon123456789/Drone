@@ -17,17 +17,26 @@
 /*            GLOBAL VARIABLES            */
 /******************************************/
 
+/*MPU6050 VARIABLE*/
 MPU6050 mpu (Wire);
 
+/*ESCs VARIABLES*/
 Servo ESC_FL, ESC_FR, ESC_BL, ESC_BR;
 float ESC_val_FL = 1000, ESC_val_FR  = 1000, ESC_val_BL  = 1000, ESC_val_BR  = 1000;
 
-
+/*PIDs VARIABLES*/
 float pid_i_mem_Roll, pid_setpoint_Roll, gyro_input_Roll, pid_output_Roll, pid_last_d_error_Roll; //Roll PID calcul value
 float pid_i_mem_Pitch, pid_setpoint_Pitch, gyro_input_Pitch, pid_output_Pitch, pid_last_d_error_Pitch; //Pitch PID calcul value
 float pid_i_mem_Yaw, pid_setpoint_Yaw, gyro_input_Yaw, pid_output_Yaw, pid_last_d_error_Yaw; //Yaw PID calcul value
 
+/*BOOT VARIABLES*/
 bool isReady = false;
+
+/*ARMING AND ALARM VARIABLES*/
+bool armed = false;
+
+unsigned long previousAlarmTime = 0L;
+int alarmIndex = 0;
 
 /*******************************/
 /*            SETUP            */
@@ -36,7 +45,8 @@ bool isReady = false;
 void setup() {
   Serial.begin(115200);
 
-  tone(PiezoPin, 3000, 250);
+  tone(PiezoPin, 2000, 250);
+
 
   Serial.println("Seting up mpu6050");
   mpu.Initialize();
@@ -44,9 +54,9 @@ void setup() {
   Serial.println("");
   mpu.Calibrate();
 
-  tone(PiezoPin, 3000, 250);
-  delay(250);
-  tone(PiezoPin, 3000, 250);
+  tone(PiezoPin, 2000, 250);
+  delay(300);
+  tone(PiezoPin, 2000, 250);
   
   Serial.println("Seting up ESCs");
   
@@ -70,7 +80,11 @@ void setup() {
   }
   Serial.println("");
 
-  tone(PiezoPin, 3000, 750);
+  tone(PiezoPin, 2000, 250);
+  delay(300);
+  tone(PiezoPin, 2000, 250);
+  delay(300);
+  tone(PiezoPin, 2000, 250);
   
   Serial.println("Seting up Reciver");
 
@@ -78,10 +92,10 @@ void setup() {
   pinMode(RollPin, INPUT);
   pinMode(PitchPin, INPUT);
   pinMode(YawPin, INPUT);
+  pinMode(Extra1Pin, INPUT);
+  pinMode(Extra2Pin, INPUT);
 
-  tone(PiezoPin, 3000, 750);
-  tone(PiezoPin, 1000, 500);
-  tone(PiezoPin, 3000, 750);
+  Booted();
 
   isReady = true;
   Serial.println("Ready");
@@ -94,7 +108,32 @@ void setup() {
 
 void loop() {
   if(!isReady) return;//Wait for ready
-  
+
+  //Check whether the drone alarm switch is on or not
+  int _alarmSwitchVal = map(pulseIn(Extra2Pin,HIGH),extra2Min,extra2Max,0,10);
+
+  if(_alarmSwitchVal > 5) { 
+    
+    Alarm();  //Play the alarm sound
+
+  }
+  //Check whether the drone is Armed or not
+  int _armedSwitchVal = map(pulseIn(Extra1Pin,HIGH),extra1Min,extra1Max,0,10);
+
+  if(_armedSwitchVal > 5 && !armed) { 
+    
+    Armed();  //Drone just armed (play armed sound)
+    armed = true; //Save the curent armed switch state
+
+  }
+  else if (_armedSwitchVal < 5 && armed) { 
+    
+    Disarmed();  //Drone just disarmed (play disarmed sound)
+    armed = false; //Save the curent armed switch state
+    return;
+    
+  }
+  else return ;
   //Get the new gyro value
   mpu.Execute();
 
@@ -163,6 +202,9 @@ void loop() {
 
 }
 
+/******************************************/
+/*            CUSTOM FUCNTIONS            */
+/******************************************/
 
 //Compute all of the pid values
 void pidCompute()
@@ -172,12 +214,12 @@ void pidCompute()
     //Roll
     _pid_error = gyro_input_Roll - pid_setpoint_Roll; 
     pid_i_mem_Roll += pid_i_Roll * _pid_error;
-    if(pid_i_mem_Roll > pid_max_Roll)pid_i_mem_Roll = pid_max_Roll;
-    else if(pid_i_mem_Roll < pid_max_Roll * -1)pid_i_mem_Roll = pid_max_Roll * -1;
+    if(pid_i_mem_Roll > pid_max_Roll) pid_i_mem_Roll = pid_max_Roll;
+    else if(pid_i_mem_Roll < pid_max_Roll * -1) pid_i_mem_Roll = pid_max_Roll * -1;
 
     pid_output_Roll = pid_p_Roll * _pid_error + pid_i_mem_Roll + pid_d_Roll * (_pid_error - pid_last_d_error_Roll);
-    if(pid_output_Roll > pid_max_Roll)pid_output_Roll = pid_max_Roll;
-    else if(pid_output_Roll < pid_max_Roll * -1)pid_output_Roll = pid_max_Roll * -1;
+    if(pid_output_Roll > pid_max_Roll) pid_output_Roll = pid_max_Roll;
+    else if(pid_output_Roll < pid_max_Roll * -1) pid_output_Roll = pid_max_Roll * -1;
 
     pid_last_d_error_Roll = _pid_error;
 
@@ -185,12 +227,12 @@ void pidCompute()
     //Pitch
     _pid_error = gyro_input_Pitch - pid_setpoint_Pitch;
     pid_i_mem_Pitch += pid_i_Pitch * _pid_error;
-    if(pid_i_mem_Pitch > pid_max_Pitch)pid_i_mem_Pitch = pid_max_Pitch;
-    else if(pid_i_mem_Pitch < pid_max_Pitch * -1)pid_i_mem_Pitch = pid_max_Pitch * -1;
+    if(pid_i_mem_Pitch > pid_max_Pitch) pid_i_mem_Pitch = pid_max_Pitch;
+    else if(pid_i_mem_Pitch < pid_max_Pitch * -1) pid_i_mem_Pitch = pid_max_Pitch * -1;
 
     pid_output_Pitch = pid_p_Pitch * _pid_error + pid_i_mem_Pitch + pid_d_Pitch * (_pid_error - pid_last_d_error_Pitch);
-    if(pid_output_Pitch > pid_max_Pitch)pid_output_Pitch = pid_max_Pitch;
-    else if(pid_output_Pitch < pid_max_Pitch * -1)pid_output_Pitch = pid_max_Pitch * -1;
+    if(pid_output_Pitch > pid_max_Pitch) pid_output_Pitch = pid_max_Pitch;
+    else if(pid_output_Pitch < pid_max_Pitch * -1) pid_output_Pitch = pid_max_Pitch * -1;
 
     pid_last_d_error_Pitch = _pid_error;
 
@@ -198,18 +240,83 @@ void pidCompute()
     //Yaw
     _pid_error = gyro_input_Yaw - pid_setpoint_Yaw;
     pid_i_mem_Yaw += pid_i_Yaw * _pid_error;
-    if(pid_i_mem_Yaw > pid_max_Yaw)pid_i_mem_Yaw = pid_max_Yaw;
-    else if(pid_i_mem_Yaw < pid_max_Yaw * -1)pid_i_mem_Yaw = pid_max_Yaw * -1;
+    if(pid_i_mem_Yaw > pid_max_Yaw) pid_i_mem_Yaw = pid_max_Yaw;
+    else if(pid_i_mem_Yaw < pid_max_Yaw * -1) pid_i_mem_Yaw = pid_max_Yaw * -1;
 
     pid_output_Yaw = pid_p_Yaw * _pid_error + pid_i_mem_Yaw + pid_d_Yaw * (_pid_error - pid_last_d_error_Yaw);
-    if(pid_output_Yaw > pid_max_Yaw)pid_output_Yaw = pid_max_Yaw;
-    else if(pid_output_Yaw < pid_max_Yaw * -1)pid_output_Yaw = pid_max_Yaw * -1;
+    if(pid_output_Yaw > pid_max_Yaw) pid_output_Yaw = pid_max_Yaw;
+    else if(pid_output_Yaw < pid_max_Yaw * -1) pid_output_Yaw = pid_max_Yaw * -1;
 
     pid_last_d_error_Yaw = _pid_error;
 }
 
-//Custom map function to map with and to float
-float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
+//Play the boot sound
+void Booted()
 {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  tone(PiezoPin, 500, 100);
+ 	delay(100);
+ 	tone(PiezoPin, 1500, 100);
+  delay(100);
+	tone(PiezoPin,  2000, 100);
+ 	delay(50);
+ 	tone(PiezoPin, 2500, 100);
+ 	delay(250);
+ 	noTone(PiezoPin);
+}
+
+//Play the Alarm sound
+void Alarm()
+{
+  unsigned long _currentTime = millis();
+  if (_currentTime - previousAlarmTime >= 100 && alarmIndex == 0) 
+  {
+    tone(PiezoPin, 1000, 100);
+    alarmIndex++;
+  }
+  else if (_currentTime - previousAlarmTime >= 100*2 && alarmIndex == 1) 
+  {
+    tone(PiezoPin, 2000, 100);
+    alarmIndex++;
+  }
+  if (_currentTime - previousAlarmTime >= 100*3 && alarmIndex == 2) 
+  {
+    tone(PiezoPin, 3000, 100);
+    alarmIndex++;
+  }
+  if (_currentTime - previousAlarmTime >= 100*5 && alarmIndex == 3) 
+  {
+    previousAlarmTime = _currentTime;
+    alarmIndex = 0;
+  } 
+}
+
+//Play the Armed sound
+void Armed()
+{
+  tone(PiezoPin, 500, 100);
+ 	delay(100);
+ 	tone(PiezoPin, 1000, 100);
+  delay(100);
+ 	tone(PiezoPin,  2000, 100);
+ 	delay(100);
+ 	noTone(PiezoPin);
+
+}
+
+//Play the Disarmed sound and Stop all motors
+void Disarmed()
+{
+  //Write the ESC stop
+  ESC_FL.writeMicroseconds(escIdle);
+  ESC_FR.writeMicroseconds(escIdle);
+  ESC_BL.writeMicroseconds(escIdle);
+  ESC_BR.writeMicroseconds(escIdle);
+
+  tone(PiezoPin, 2000, 100);
+	delay(100);
+ 	tone(PiezoPin, 1000, 100);
+ 	delay(100);
+	tone(PiezoPin, 2500, 100);
+ 	delay(100);
+ 	noTone(PiezoPin);
 }
