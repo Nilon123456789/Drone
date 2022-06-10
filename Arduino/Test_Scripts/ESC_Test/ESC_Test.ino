@@ -1,11 +1,13 @@
 #include <Servo.h>
 
 
-//ESC                                                        CW    CCW
-#define EscPinFL 11 //CW                                       ╲  ╱
-#define EscPinFR 10 //CCW                                        ▉     ↑ forward
-#define EscPinBL 9 //CCW                                       ╱  ╲
-#define EscPinBR 6 //CW                                     CCW    CW
+//                                                               (2)   (1)
+//ESC                                                            CW    CCW
+#define EscPinFR 11 //CCW  (1)                                     ╲  ╱
+#define EscPinFL 10 //CW (2)                                        ▉     ↑ forward
+#define EscPinBR 9 //CW  (3)                                      ╱  ╲
+#define EscPinBL 6 //CCW   (4)                                   CCW    CW
+//                                                              (4)    (3)
 
 //Remote
 #define ThrotlePin A0
@@ -36,29 +38,25 @@ void setup() {
   Serial.print('>');
 
   
-  //Set the ESC to remote max speed
-  ESC_FL.writeMicroseconds(throttleMax); 
-  ESC_FR.writeMicroseconds(throttleMax);
-  ESC_BL.writeMicroseconds(throttleMax); 
-  ESC_BR.writeMicroseconds(throttleMax);
+  //Set the ESC to max speed
+  ESC_FL.writeMicroseconds(escMax); 
+  ESC_FR.writeMicroseconds(escMax);
+  ESC_BL.writeMicroseconds(escMax); 
+  ESC_BR.writeMicroseconds(escMax);
 
   tone(3, 3000, 750);
   delay(5000);
   tone(3, 3000, 750);
   Serial.print('>');
 
-  for(int i; i < 15; i++) {//Delay with feedback to let the esc boot
-    Serial.print('*');
-    delay(1000);
-  }
-  tone(3, 3000, 750);
-  Serial.println("");
+  //Set the ESC to the min speed
+  ESC_FL.writeMicroseconds(escIdle); 
+  ESC_FR.writeMicroseconds(escIdle);
+  ESC_BL.writeMicroseconds(escIdle); 
+  ESC_BR.writeMicroseconds(escIdle);
 
-  //Set the ESC to remote max speed
-  ESC_FL.writeMicroseconds(throttleMin); 
-  ESC_FR.writeMicroseconds(throttleMin);
-  ESC_BL.writeMicroseconds(throttleMin); 
-  ESC_BR.writeMicroseconds(throttleMin);
+  delay(5000);
+  tone(3, 3000, 750);
 
   Serial.println("Seting up Reciver");
 
