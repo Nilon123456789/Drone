@@ -34,8 +34,8 @@
 #define RollPin A1
 #define PitchPin A2  
 #define YawPin A3
-#define Extra1Pin A4
-#define Extar2Pin A5
+#define Extra1Pin 4
+#define Extra2Pin 5
 
 /******************************************/
 /*            GLOBAL VARIABLES            */
@@ -47,6 +47,8 @@ int throttleMin=0L, throttleMax=0L;
 int rollMin=0L, rollMax=0L;
 int pitchMin=0L, pitchMax=0L;
 int yawMin=0L, yawMax=0L;
+int extra1Min=0L, extra1Max=0L;
+int extra2Min=0L, extra2Max=0L;
 
 float GyroX=0L, GyroY=0L, GyroZ=0L;
 
@@ -115,6 +117,16 @@ void RcSetup() {
   yawMin = GetMinMax(YawPin,"yaw",false);
   yawMax = GetMinMax(YawPin,"yaw",true);
 
+  //Get min max for the Extra 1
+  delay(1000);
+  extra1Min = GetMinMax(Extra1Pin,"Extra 1",false);
+  extra1Max = GetMinMax(Extra1Pin,"Extra 2",true);
+
+  //Get min max for the Extra 2
+  delay(1000);
+  extra2Min = GetMinMax(Extra2Pin,"Extra 2",false);
+  extra2Max = GetMinMax(Extra2Pin,"Extra 2",true);
+
   
   
   Serial.println("Remote Min Max:");
@@ -136,7 +148,15 @@ void RcSetup() {
 
   Serial.print("\t");
   String yawString = "yawMin=" + String(yawMin) + ", yawMax=" + String(yawMax) + ";"; 
-  Serial.println(varName + yawString + "\n");
+  Serial.println(varName + yawString);
+
+  Serial.print("\t");
+  String extra1String = "extra1Min=" + String(extra1Min) + ", extra1Max=" + String(extra1Max) + ";"; 
+  Serial.println(varName + extra1String);
+
+  Serial.print("\t");
+  String extra2String = "extra2Min=" + String(extra2Min) + ", extra2Max=" + String(extra2Max) + ";"; 
+  Serial.println(varName + extra2String + "\n");
 }
 
 void MpuSetup() {
@@ -216,7 +236,16 @@ void PrintAll() {
 
     Serial.print("\t");
     String yawString = "yawMin=" + String(yawMin) + ", yawMax=" + String(yawMax) + ";"; 
-    Serial.println(varName + yawString + "\n");
+    Serial.println(varName + yawString);
+
+
+  Serial.print("\t");
+  String extra1String = "extra1Min=" + String(extra1Min) + ", extra1Max=" + String(extra1Max) + ";"; 
+  Serial.println(varName + extra1String);
+
+  Serial.print("\t");
+  String extra2String = "extra2Min=" + String(extra2Min) + ", extra2Max=" + String(extra2Max) + ";"; 
+  Serial.println(varName + extra2String + "\n");
   #endif
 
   Serial.println();

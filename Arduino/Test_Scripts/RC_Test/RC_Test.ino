@@ -2,8 +2,8 @@
 #define RollPin A1
 #define PitchPin A2  
 #define YawPin A3
-#define Extra1Pin A4
-#define Extar2Pin A5
+#define Extra1Pin 4
+#define Extra2Pin 5
 
 void setup() {
   Serial.begin(115200);
@@ -22,5 +22,5 @@ void loop() {
   Serial.print("\t");
   Serial.print(pulseIn(Extra1Pin,HIGH));
   Serial.print("\t");
-  Serial.println(pulseIn(Extra1Pin,HIGH));
+  Serial.println(pulseIn(Extra2Pin,HIGH));
 }
