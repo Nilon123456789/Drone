@@ -25,6 +25,15 @@ extern const int pitchMinAngle=-45, pitchMaxAngle=45;
 extern const int yawMinAngle=-10, yawMaxAngle=10;
 //Yaw move speed
 extern const float yawStrenght = 0.1;
+
+extern const int mappedAxis[3][3] = //Place a 1 or -1 (to invert) to link the mpu input (on the top) to the axis output (on the side), one 1 max per row and colums
+{
+//  X , Y , Z
+  {'0','1','0'}, //Pitch
+  {'1','0','0'}, //Roll
+  {'0','0','1'} //Yaw
+};
+
 /******MPU6050 Values******/
 extern const float GyroX=-109.47, GyroY=51.02, GyroZ=-109.47;//Gyro offset 
 /******PID Values******/
