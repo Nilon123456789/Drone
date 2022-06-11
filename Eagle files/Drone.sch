@@ -2804,8 +2804,8 @@ CONN_03
 <instance part="+3V3-1" gate="G$1" x="10.16" y="96.52" smashed="yes" rot="R90"/>
 <instance part="SCL" gate="G$1" x="20.32" y="96.52" smashed="yes" rot="R90"/>
 <instance part="SDA" gate="G$1" x="25.4" y="96.52" smashed="yes" rot="R90"/>
-<instance part="SDA-2" gate="G$1" x="58.42" y="55.88" smashed="yes" rot="R180"/>
-<instance part="SCL-2" gate="G$1" x="58.42" y="58.42" smashed="yes" rot="R180"/>
+<instance part="SDA-2" gate="G$1" x="55.88" y="50.8" smashed="yes" rot="R180"/>
+<instance part="SCL-2" gate="G$1" x="55.88" y="53.34" smashed="yes" rot="R180"/>
 <instance part="VCC-1" gate="G$1" x="-35.56" y="78.74" smashed="yes" rot="R270"/>
 <instance part="VCC-2" gate="G$1" x="53.34" y="68.58" smashed="yes" rot="R180"/>
 <instance part="+3V3-2" gate="G$1" x="55.88" y="35.56" smashed="yes" rot="R180"/>
@@ -2833,10 +2833,10 @@ CONN_03
 <wire x1="20.32" y1="99.06" x2="20.32" y2="101.6" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="ARDUINO_NANO" gate="G$1" pin="A7"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A5"/>
+<wire x1="48.26" y1="53.34" x2="53.34" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="SCL-2" gate="G$1" pin="P"/>
-<wire x1="48.26" y1="58.42" x2="55.88" y2="58.42" width="0.1524" layer="91"/>
-<label x="60.96" y="58.42" size="1.778" layer="95"/>
+<label x="58.42" y="53.34" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="SDA" class="0">
@@ -2846,10 +2846,10 @@ CONN_03
 <wire x1="25.4" y1="99.06" x2="25.4" y2="101.6" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="ARDUINO_NANO" gate="G$1" pin="A6"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A4"/>
+<wire x1="48.26" y1="50.8" x2="53.34" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="SDA-2" gate="G$1" pin="P"/>
-<wire x1="48.26" y1="55.88" x2="55.88" y2="55.88" width="0.1524" layer="91"/>
-<label x="60.96" y="55.88" size="1.778" layer="95"/>
+<label x="58.42" y="50.8" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ESC3" class="0">
