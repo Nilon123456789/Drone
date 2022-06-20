@@ -166,15 +166,15 @@ void loop() {
   pidCompute();
 
   //Seting the new ESC val from the pid output
-  ESC_val_FL = _throttle + pid_output_Roll + pid_output_Pitch + pid_output_Yaw;
-  ESC_val_FR = _throttle - pid_output_Roll + pid_output_Pitch - pid_output_Yaw;
-  ESC_val_BL = _throttle + pid_output_Roll - pid_output_Pitch - pid_output_Yaw;
-  ESC_val_BR = _throttle - pid_output_Roll - pid_output_Pitch + pid_output_Yaw;
+  ESC_val_FL = _throttle + pid_output_Roll + pid_output_Pitch + pid_output_Yaw + escTunerFL;
+  ESC_val_FR = _throttle - pid_output_Roll + pid_output_Pitch - pid_output_Yaw + escTunerFR;
+  ESC_val_BL = _throttle + pid_output_Roll - pid_output_Pitch - pid_output_Yaw + escTunerBL;
+  ESC_val_BR = _throttle - pid_output_Roll - pid_output_Pitch + pid_output_Yaw + escTunerBR;
   */
-  ESC_val_FL = _throttle;
-  ESC_val_FR = _throttle;
-  ESC_val_BL = _throttle;
-  ESC_val_BR = _throttle;
+  ESC_val_FL = _throttle + escTunerFL;
+  ESC_val_FR = _throttle + escTunerFR;
+  ESC_val_BL = _throttle + escTunerBL;
+  ESC_val_BR = _throttle + escTunerBR;
 
   
   

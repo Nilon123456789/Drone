@@ -43,6 +43,11 @@ extern const int pid_max_Yaw = 400; //Max PID output for yaw
 extern const int escIdle = 1000; //ESC idle speed
 extern const int escMin = 1100; //ESC min working speed (for all esc)
 extern const int escMax = 2000; //ESC max working spee (for all esc)
+//Value to tune the ESC if there not properly calibrated
+extern const int escTunerFL = -100;
+extern const int escTunerFR = 0;
+extern const int escTunerBL = -100;
+extern const int escTunerBR = 0;
 
 /******RC Values******/
 //If axis are inversed switch the min and the max
