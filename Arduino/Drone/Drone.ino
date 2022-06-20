@@ -120,11 +120,15 @@ void loop() {
   //Check whether the drone is Armed or not
   int _armedSwitchVal = map(pulseIn(Extra1Pin,HIGH),extra1Min,extra1Max,0,10);
 
-  if(_armedSwitchVal > 5 && !armed) { 
+  if(!armed)
+  {
+    if(_armedSwitchVal > 5 && !armed) { 
     
     Armed();  //Drone just armed (play armed sound)
     armed = true; //Save the curent armed switch state
-
+    
+    }
+    else return ;
   }
   else if (_armedSwitchVal < 5 && armed) { 
     
@@ -133,7 +137,6 @@ void loop() {
     return;
     
   }
-  else return ;
   //Get the new gyro value
   mpu.Execute();
 
