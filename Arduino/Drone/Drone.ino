@@ -137,16 +137,8 @@ void loop() {
     return;
     
   }
-  //Get the new gyro value
-  mpu.Execute();
-
-  //Set the angles in an array
-  float mpuAngles[3] = {mpu.GetAngX(), mpu.GetAngY(), mpu.GetAngZ()};
-
-  //Set the new gyro Value based on the axis
-  gyro_input_Roll = mpuAngles[0] * mappedAxis[0][0] + mpuAngles[1] * mappedAxis[0][1] + mpuAngles[2] * mappedAxis[0][2];
-  gyro_input_Pitch = mpuAngles[0] * mappedAxis[1][0] + mpuAngles[1] * mappedAxis[1][1] + mpuAngles[2] * mappedAxis[1][2];
-  gyro_input_Yaw = mpuAngles[0] * mappedAxis[2][0] + mpuAngles[1] * mappedAxis[2][1] + mpuAngles[2] * mappedAxis[2][2];
+  
+  GetAngles(); //Get the XYZ angle of the MPU6050
 
   //Get the current throttle value
   int _throttle = map(pulseIn(ThrotlePin,HIGH),throttleMin,throttleMax,escIdle,escMax);
@@ -208,6 +200,21 @@ void loop() {
 /******************************************/
 /*            CUSTOM FUCNTIONS            */
 /******************************************/
+
+//Get XYZ angles form the MPU6050
+void GetAngles() 
+{
+  //Get the new gyro value
+  mpu.Execute();
+
+  //Set the angles in an array
+  float mpuAngles[3] = {mpu.GetAngX(), mpu.GetAngY(), mpu.GetAngZ()};
+
+  //Set the new gyro Value based on the axis
+  gyro_input_Roll = mpuAngles[0] * mappedAxis[0][0] + mpuAngles[1] * mappedAxis[0][1] + mpuAngles[2] * mappedAxis[0][2];
+  gyro_input_Pitch = mpuAngles[0] * mappedAxis[1][0] + mpuAngles[1] * mappedAxis[1][1] + mpuAngles[2] * mappedAxis[1][2];
+  gyro_input_Yaw = mpuAngles[0] * mappedAxis[2][0] + mpuAngles[1] * mappedAxis[2][1] + mpuAngles[2] * mappedAxis[2][2];
+}
 
 //Compute all of the pid values
 void pidCompute()
