@@ -35,8 +35,13 @@ bool isReady = false;
 /*ARMING AND ALARM VARIABLES*/
 bool armed = false;
 
+/*Is the drone upside down*/
+bool upSideDown = false;
+
 unsigned long previousAlarmTime = 0L;
+unsigned long previousUpSideAlarmTime = 0L;
 int alarmIndex = 0;
+bool upSideAlarm = false;
 
 /*******************************/
 /*            SETUP            */
@@ -74,7 +79,7 @@ void setup() {
   ESC_BR.writeMicroseconds(escIdle);
   Serial.print('>');
 
-  for(int i; i < 15; i++) {//Delay with feedback to let the esc boot
+  for(int i; i < 10; i++) {//Delay with feedback to let the esc boot
     Serial.print('*');
     delay(1000);
   }
@@ -140,6 +145,17 @@ void loop() {
   
   GetAngles(); //Get the XYZ angle of the MPU6050
 
+//If the drone is upsidedown shutoff and play a sound
+  if(upSideDown)
+  {
+    ESC_FL.writeMicroseconds(escIdle); 
+    ESC_FR.writeMicroseconds(escIdle);
+    ESC_BL.writeMicroseconds(escIdle); 
+    ESC_BR.writeMicroseconds(escIdle);
+    UpSideDownAlarm();
+    return;
+  }
+
   //Get the current throttle value
   int _throttle = map(pulseIn(ThrotlePin,HIGH),throttleMin,throttleMax,escIdle,escMax);
 
@@ -161,7 +177,6 @@ void loop() {
   if (pid_setpoint_Yaw > 180) pid_setpoint_Yaw = -180 + (pid_setpoint_Yaw - 180);
   if (pid_setpoint_Yaw < -180) pid_setpoint_Yaw = 180 + (pid_setpoint_Yaw + 180);
 
-  /*
   //Compute the pid values
   pidCompute();
 
@@ -170,13 +185,6 @@ void loop() {
   ESC_val_FR = _throttle - pid_output_Roll + pid_output_Pitch - pid_output_Yaw + escTunerFR;
   ESC_val_BL = _throttle + pid_output_Roll - pid_output_Pitch - pid_output_Yaw + escTunerBL;
   ESC_val_BR = _throttle - pid_output_Roll - pid_output_Pitch + pid_output_Yaw + escTunerBR;
-  */
-  ESC_val_FL = _throttle + escTunerFL;
-  ESC_val_FR = _throttle + escTunerFR;
-  ESC_val_BL = _throttle + escTunerBL;
-  ESC_val_BR = _throttle + escTunerBR;
-
-  
   
   //Make sure motor val ar in range
   if (ESC_val_FL < escMin) ESC_val_FL = escMin;
@@ -214,6 +222,10 @@ void GetAngles()
   gyro_input_Roll = mpuAngles[0] * mappedAxis[0][0] + mpuAngles[1] * mappedAxis[0][1] + mpuAngles[2] * mappedAxis[0][2];
   gyro_input_Pitch = mpuAngles[0] * mappedAxis[1][0] + mpuAngles[1] * mappedAxis[1][1] + mpuAngles[2] * mappedAxis[1][2];
   gyro_input_Yaw = mpuAngles[0] * mappedAxis[2][0] + mpuAngles[1] * mappedAxis[2][1] + mpuAngles[2] * mappedAxis[2][2];
+
+  //Check if upside down
+  if (gyro_input_Pitch > 90 || gyro_input_Roll > 90) upSideDown = true;
+  else upSideDown = false;
 }
 
 //Compute all of the pid values
@@ -288,12 +300,12 @@ void Alarm()
     tone(PiezoPin, 2000, 100);
     alarmIndex++;
   }
-  if (_currentTime - previousAlarmTime >= 100*3 && alarmIndex == 2) 
+  else if (_currentTime - previousAlarmTime >= 100*3 && alarmIndex == 2) 
   {
     tone(PiezoPin, 3000, 100);
     alarmIndex++;
   }
-  if (_currentTime - previousAlarmTime >= 100*5 && alarmIndex == 3) 
+  else if (_currentTime - previousAlarmTime >= 100*5 && alarmIndex == 3) 
   {
     previousAlarmTime = _currentTime;
     alarmIndex = 0;
@@ -329,4 +341,21 @@ void Disarmed()
 	tone(PiezoPin, 2500, 100);
  	delay(100);
  	noTone(PiezoPin);
+}
+
+//Play the Upside down alarm sound
+void UpSideDownAlarm()
+{
+  unsigned long _currentTime = millis();
+  if (_currentTime - previousUpSideAlarmTime >= 100 && !upSideAlarm) 
+  {
+    tone(PiezoPin, 1000, 100);
+     upSideAlarm = true;
+  }
+  else if (_currentTime - previousAlarmTime >= 100*2 && upSideAlarm) 
+  {
+    tone(PiezoPin, 1000, 100);
+    previousAlarmTime = _currentTime;
+    upSideAlarm = false;
+  }
 }

@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "Arduino",
-            "compilerPath": "~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-g++",
+            "compilerPath": "/Users/nilslahaye/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-g++",
             "compilerArgs": [
                 "-w",
                 "-std=gnu++11",
@@ -16,17 +16,17 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "~/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/cores/arduino",
-                "~/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/variants/eightanaloginputs",
-                "~/Documents/Arduino/libraries/TinyMPU6050/src",
-                "~/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/libraries/Wire/src",
+                "/Users/nilslahaye/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/cores/arduino",
+                "/Users/nilslahaye/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/variants/eightanaloginputs",
+                "/Users/nilslahaye/Documents/Arduino/libraries/TinyMPU6050/src",
+                "/Users/nilslahaye/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/libraries/Wire/src",
                 "/Applications/Arduino.app/Contents/Java/libraries/Servo/src",
-                "~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include",
-                "~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include-fixed",
-                "~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include"
+                "/Users/nilslahaye/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include",
+                "/Users/nilslahaye/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include-fixed",
+                "/Users/nilslahaye/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include"
             ],
             "forcedInclude": [
-                "~/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/cores/arduino/Arduino.h"
+                "/Users/nilslahaye/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/cores/arduino/Arduino.h"
             ],
             "cStandard": "c11",
             "cppStandard": "c++11",
